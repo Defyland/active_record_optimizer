@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:active_record_optimizer:schemas:runtime-query-snapshot:v1",
+  "title": "Active Record Optimizer Runtime Query Snapshot v1",
+  "type": "object",
+  "required": ["metadata", "queries", "query_usages"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["schema_version", "generator", "capture"],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "generator": {
+          "type": "object",
+          "required": ["name", "version"],
+          "properties": {
+            "name": {
+              "const": "active_record_optimizer"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "capture": {
+          "type": "object",
+          "required": ["literalized_binds"],
+          "properties": {
+            "literalized_binds": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sql", "name", "duration_ms", "explain_sql"],
+        "properties": {
+          "sql": {
+            "type": "string"
+          },
+          "name": {
+            "type": ["string", "null"]
+          },
+          "duration_ms": {
+            "type": "number"
+          },
+          "explain_sql": {
+            "type": ["string", "null"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "query_usages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "table",
+          "column",
+          "operation",
+          "source",
+          "origin",
+          "count",
+          "total_duration_ms",
+          "path",
+          "line",
+          "explain_source",
+          "plan_summary",
+          "plan_root_node_type",
+          "plan_relation_node_type",
+          "plan_relation_name",
+          "plan_rows",
+          "where_columns"
+        ],
+        "properties": {
+          "table": {
+            "type": "string"
+          },
+          "column": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "origin": {
+            "const": "runtime"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "total_duration_ms": {
+            "type": ["number", "null"]
+          },
+          "path": {
+            "type": "null"
+          },
+          "line": {
+            "type": "null"
+          },
+          "explain_source": {
+            "type": ["string", "null"]
+          },
+          "plan_summary": {
+            "type": ["string", "null"]
+          },
+          "plan_root_node_type": {
+            "type": ["string", "null"]
+          },
+          "plan_relation_node_type": {
+            "type": ["string", "null"]
+          },
+          "plan_relation_name": {
+            "type": ["string", "null"]
+          },
+          "plan_rows": {
+            "type": ["integer", "null"]
+          },
+          "where_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

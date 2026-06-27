@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:active_record_optimizer:schemas:json-report:v1",
+  "title": "Active Record Optimizer JSON Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "counts", "findings"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "generator"],
+      "properties": {
+        "schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "generator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "const": "active_record_optimizer"
+            },
+            "version": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "propertyNames": {
+        "enum": ["high", "medium", "low"]
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "severity",
+        "code",
+        "title",
+        "model",
+        "table",
+        "column",
+        "problem",
+        "recommendation",
+        "evidence",
+        "details"
+      ],
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "code": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "model": {
+          "type": ["string", "null"]
+        },
+        "table": {
+          "type": ["string", "null"]
+        },
+        "column": {
+          "type": ["string", "null"]
+        },
+        "problem": {
+          "type": "string"
+        },
+        "recommendation": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "details": {
+          "type": ["object", "null"],
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}
