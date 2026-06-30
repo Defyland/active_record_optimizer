@@ -10,6 +10,9 @@ Rails makes database access productive, but it also makes expensive or unsafe qu
 
 This gem is intentionally narrower than a style linter: it looks for issues where it can show concrete model, schema, source, migration, runtime, or planner evidence. The goal is to give Rails teams a CI-friendly audit that points to database risks worth investigating, not to enforce subjective code style.
 
+The engineering case study for the product and release shape lives in
+[`docs/engineering-case-study.md`](docs/engineering-case-study.md).
+
 ## Real Use Cases
 
 - Run before a Rails app grows past toy data volume to catch integrity and index gaps early.
@@ -151,6 +154,34 @@ bundle exec rake verify_postgres
 That PostgreSQL path now covers adapter-focused rule tests plus a disposable Rails host-app rehearsal that consumes the built gem package against a real PostgreSQL database, captures runtime SQL, and exercises `--explain-runtime`.
 
 CI runs the default verification suite on Ruby `3.2`, `3.3`, and `3.4`, plus a dedicated PostgreSQL integration job on Ruby `3.4`.
+
+## How To Evaluate This Repo
+
+For a fast technical review:
+
+```sh
+bundle install
+bundle exec rake verify
+bundle exec rake verify_postgres
+bundle exec rake build
+ruby -e 'require "rubygems/package"; puts Gem::Package.new(Dir["pkg/active_record_optimizer-*.gem"].fetch(0)).contents.grep(%r{^(README|docs/)})'
+```
+
+Expected evidence:
+
+- `verify` proves the default Ruby suite, RuboCop, `bundler-audit`, schema
+  validation, built-gem package verification, and a disposable host-app smoke
+  path for the packaged gem.
+- `verify_postgres` proves the adapter-specific `--explain-runtime` path
+  against a real PostgreSQL database.
+- the built gem includes `README.md`,
+  `docs/architecture.md`,
+  `docs/contract-versioning.md`,
+  `docs/decisions.md`,
+  `docs/engineering-case-study.md`, and the published JSON schemas instead of
+  leaving the review material only in the checkout.
+- the packaged host-app smoke path captures a runtime snapshot and validates it
+  against the packaged runtime-schema contract.
 
 ## Current Limits
 

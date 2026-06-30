@@ -15,7 +15,13 @@ module ActiveRecordOptimizer
       docs/runtime-query-snapshot-schema-v1.json
       docs/runtime-query-snapshot-schema-v2.json
     ].freeze
-    PUBLIC_DOCS = %w[README.md docs/contract-versioning.md].freeze
+    PUBLIC_DOCS = %w[
+      README.md
+      docs/architecture.md
+      docs/contract-versioning.md
+      docs/decisions.md
+      docs/engineering-case-study.md
+    ].freeze
     ABSOLUTE_LOCAL_LINK_PATTERN = %r{\(/Users/}
 
     module_function
@@ -78,7 +84,7 @@ module ActiveRecordOptimizer
     def verify_built_package_artifacts!(gem_path)
       contents = package_contents(gem_path)
       verify_packaged_contract_files!(contents)
-      verify_public_docs!(gem_path)
+      verify_public_docs!(gem_path, contents)
     end
 
     def verify_packaged_contract_files!(contents)
@@ -88,7 +94,11 @@ module ActiveRecordOptimizer
       raise ActiveRecordOptimizer::Error, "Built gem is missing public contract files: #{missing.join(', ')}."
     end
 
-    def verify_public_docs!(gem_path)
+    def verify_public_docs!(gem_path, contents = nil)
+      contents ||= package_contents(gem_path)
+      missing = PUBLIC_DOCS - contents
+      raise ActiveRecordOptimizer::Error, "Built gem is missing public docs: #{missing.join(', ')}." if missing.any?
+
       packaged_public_docs(gem_path) do |docs|
         offending_paths = docs.filter_map do |path, contents|
           path if contents.match?(ABSOLUTE_LOCAL_LINK_PATTERN)

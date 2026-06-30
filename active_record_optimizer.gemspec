@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
       'README.md',
       'LICENSE.txt',
       'docs/*.json',
-      'docs/contract-versioning.md'
+      'docs/*.md'
     ].reject { |file| file.start_with?('lib/active_record_optimizer/package_audit') }
   end
   spec.bindir = 'exe'

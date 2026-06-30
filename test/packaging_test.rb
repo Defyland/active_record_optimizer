@@ -19,6 +19,16 @@ class PackagingTest < Minitest::Test
     end
   end
 
+  def test_built_gem_includes_public_study_docs
+    with_built_package do |gem_path|
+      files = ActiveRecordOptimizer::PackageAudit.package_contents(gem_path)
+
+      ActiveRecordOptimizer::PackageAudit::PUBLIC_DOCS.each do |path|
+        assert_includes files, path
+      end
+    end
+  end
+
   def test_built_gem_does_not_include_package_audit_harness
     with_built_package do |gem_path|
       files = ActiveRecordOptimizer::PackageAudit.package_contents(gem_path)

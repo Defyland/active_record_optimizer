@@ -183,3 +183,45 @@ Verification evidence:
 - `docs/contract-versioning.md`.
 - `test/report_test.rb`.
 - `test/packaging_test.rb`.
+
+## 2026-06-29 - Ship Review Docs Inside The Built Gem
+
+Context: the project is not only a runtime tool; it is also a study artifact
+for technical review. If the architecture, decisions, and engineering case
+study live only in the checkout, the packaged release becomes less truthful
+than the repository.
+
+Options considered:
+
+- Keep study docs only in the Git checkout.
+- Publish study docs in the README only.
+- Ship the study docs inside the built gem and verify them during package audit.
+
+Choice: ship `docs/architecture.md`, `docs/decisions.md`, and
+`docs/engineering-case-study.md` inside the built gem and treat them as public
+docs in package verification.
+
+Pros:
+
+- Reviewers can inspect the product rationale from the packaged artifact, not
+  only the repository tree.
+- The release surface stays aligned with the educational/documentation promise.
+- Package verification catches accidental drift where docs stop shipping.
+
+Cons:
+
+- Public docs become a maintained release surface.
+- Packaging changes now need to consider documentation presence explicitly.
+
+Consequences:
+
+- The gemspec must package the study docs.
+- Package audit must fail when those docs disappear or contain local-only links.
+- README review instructions should point evaluators to the packaged-doc
+  expectation directly.
+
+Verification evidence:
+
+- `active_record_optimizer.gemspec`.
+- `lib/active_record_optimizer/package_audit.rb`.
+- `test/packaging_test.rb`.
