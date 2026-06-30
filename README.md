@@ -293,3 +293,11 @@ This gem should not become a generic Rails style linter. A rule should fire only
 - JSON reports expose versioned `metadata` so CI and internal tooling can target a stable schema.
 - Migration reference evidence now comes from Ruby AST parsing with `Prism`, which avoids comment and string false positives.
 - PostgreSQL expression indexes for JSONB paths are covered by dedicated integration tests.
+
+## License
+
+This gem is published under the MIT License. See
+[LICENSE.txt](LICENSE.txt).
+
+That keeps the analyzer, packaged study docs, and verification notes reusable
+for study and internal experimentation.
